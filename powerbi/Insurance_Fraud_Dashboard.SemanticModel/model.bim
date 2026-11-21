@@ -1,0 +1,310 @@
+{
+  "name": "Insurance_Fraud_Dashboard",
+  "compatibilityLevel": 1550,
+  "model": {
+    "culture": "en-US",
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "sourceQueryCulture": "en-US",
+    "tables": [
+      {
+        "name": "fraud_predictions",
+        "columns": [
+          {
+            "name": "PolicyNumber",
+            "dataType": "int64",
+            "sourceColumn": "PolicyNumber"
+          },
+          {
+            "name": "FraudFound_P",
+            "dataType": "int64",
+            "sourceColumn": "FraudFound_P"
+          },
+          {
+            "name": "Actual_Fraud",
+            "dataType": "int64",
+            "sourceColumn": "Actual_Fraud"
+          },
+          {
+            "name": "Actual_Fraud_Status",
+            "dataType": "string",
+            "sourceColumn": "Actual_Fraud_Status"
+          },
+          {
+            "name": "Predicted_Fraud",
+            "dataType": "int64",
+            "sourceColumn": "Predicted_Fraud"
+          },
+          {
+            "name": "Predicted_Fraud_Status",
+            "dataType": "string",
+            "sourceColumn": "Predicted_Fraud_Status"
+          },
+          {
+            "name": "Fraud_Probability",
+            "dataType": "double",
+            "sourceColumn": "Fraud_Probability"
+          },
+          {
+            "name": "Risk_Category",
+            "dataType": "string",
+            "sourceColumn": "Risk_Category"
+          },
+          {
+            "name": "Month",
+            "dataType": "string",
+            "sourceColumn": "Month"
+          },
+          {
+            "name": "Make",
+            "dataType": "string",
+            "sourceColumn": "Make"
+          },
+          {
+            "name": "VehicleCategory",
+            "dataType": "string",
+            "sourceColumn": "VehicleCategory"
+          },
+          {
+            "name": "AccidentArea",
+            "dataType": "string",
+            "sourceColumn": "AccidentArea"
+          },
+          {
+            "name": "PolicyType",
+            "dataType": "string",
+            "sourceColumn": "PolicyType"
+          },
+          {
+            "name": "Age",
+            "dataType": "int64",
+            "sourceColumn": "Age"
+          },
+          {
+            "name": "Age_Group",
+            "dataType": "string",
+            "sourceColumn": "Age_Group"
+          },
+          {
+            "name": "AgeOfVehicle",
+            "dataType": "string",
+            "sourceColumn": "AgeOfVehicle"
+          },
+          {
+            "name": "PastNumberOfClaims",
+            "dataType": "string",
+            "sourceColumn": "PastNumberOfClaims"
+          },
+          {
+            "name": "Deductible",
+            "dataType": "int64",
+            "sourceColumn": "Deductible"
+          },
+          {
+            "name": "DriverRating",
+            "dataType": "int64",
+            "sourceColumn": "DriverRating"
+          },
+          {
+            "name": "Year",
+            "dataType": "int64",
+            "sourceColumn": "Year"
+          }
+        ],
+        "measures": [
+          {
+            "name": "Total Claims",
+            "expression": "COUNTROWS('fraud_predictions')",
+            "formatString": "#,##0"
+          },
+          {
+            "name": "Fraudulent Claims",
+            "expression": "CALCULATE(COUNTROWS('fraud_predictions'), 'fraud_predictions'[Actual_Fraud] = 1)",
+            "formatString": "#,##0"
+          },
+          {
+            "name": "Genuine Claims",
+            "expression": "CALCULATE(COUNTROWS('fraud_predictions'), 'fraud_predictions'[Actual_Fraud] = 0)",
+            "formatString": "#,##0"
+          },
+          {
+            "name": "Fraud Rate",
+            "expression": "DIVIDE([Fraudulent Claims], [Total Claims], 0)",
+            "formatString": "0.00%"
+          },
+          {
+            "name": "Fraud Rate %",
+            "expression": "DIVIDE([Fraudulent Claims], [Total Claims], 0)",
+            "formatString": "0.00%"
+          },
+          {
+            "name": "High Risk Claims",
+            "expression": "CALCULATE(COUNTROWS('fraud_predictions'), 'fraud_predictions'[Risk_Category] = \"High Risk\")",
+            "formatString": "#,##0"
+          },
+          {
+            "name": "Medium Risk Claims",
+            "expression": "CALCULATE(COUNTROWS('fraud_predictions'), 'fraud_predictions'[Risk_Category] = \"Medium Risk\")",
+            "formatString": "#,##0"
+          },
+          {
+            "name": "Low Risk Claims",
+            "expression": "CALCULATE(COUNTROWS('fraud_predictions'), 'fraud_predictions'[Risk_Category] = \"Low Risk\")",
+            "formatString": "#,##0"
+          },
+          {
+            "name": "Urban Fraud Claims",
+            "expression": "CALCULATE([Fraudulent Claims], 'fraud_predictions'[AccidentArea] = \"Urban\")",
+            "formatString": "#,##0"
+          },
+          {
+            "name": "Rural Fraud Claims",
+            "expression": "CALCULATE([Fraudulent Claims], 'fraud_predictions'[AccidentArea] = \"Rural\")",
+            "formatString": "#,##0"
+          },
+          {
+            "name": "Best Model Name",
+            "expression": "\"Gradient Boosting\"",
+            "formatString": "@"
+          },
+          {
+            "name": "Best Accuracy",
+            "expression": "0.7023",
+            "formatString": "0.00%"
+          },
+          {
+            "name": "Best Recall",
+            "expression": "0.8811",
+            "formatString": "0.00%"
+          },
+          {
+            "name": "Best ROC-AUC",
+            "expression": "0.8419",
+            "formatString": "0.0000"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "fraud_predictions",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(\"D:\\\\fadd\\\\mini project\\\\outputs\\\\fraud_predictions.csv\"), [Delimiter=\",\", Columns=40, Encoding=65001, QuoteStyle=QuoteStyle.None]),",
+                "    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    ChangedTypes = Table.TransformColumnTypes(PromotedHeaders, {",
+                "        {\"PolicyNumber\", Int64.Type},",
+                "        {\"FraudFound_P\", Int64.Type},",
+                "        {\"Actual_Fraud\", Int64.Type},",
+                "        {\"Predicted_Fraud\", Int64.Type},",
+                "        {\"Fraud_Probability\", type number},",
+                "        {\"Age\", Int64.Type},",
+                "        {\"Deductible\", Int64.Type},",
+                "        {\"DriverRating\", Int64.Type},",
+                "        {\"Year\", Int64.Type}",
+                "    })",
+                "in",
+                "    ChangedTypes"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "model_comparison",
+        "columns": [
+          {
+            "name": "Model",
+            "dataType": "string",
+            "sourceColumn": "Model"
+          },
+          {
+            "name": "Accuracy",
+            "dataType": "double",
+            "sourceColumn": "Accuracy",
+            "formatString": "0.00%"
+          },
+          {
+            "name": "Precision",
+            "dataType": "double",
+            "sourceColumn": "Precision",
+            "formatString": "0.00%"
+          },
+          {
+            "name": "Recall",
+            "dataType": "double",
+            "sourceColumn": "Recall",
+            "formatString": "0.00%"
+          },
+          {
+            "name": "F1_Score",
+            "dataType": "double",
+            "sourceColumn": "F1_Score",
+            "formatString": "0.0000"
+          },
+          {
+            "name": "ROC_AUC",
+            "dataType": "double",
+            "sourceColumn": "ROC_AUC",
+            "formatString": "0.0000"
+          }
+        ],
+        "measures": [
+          {
+            "name": "Model Accuracy",
+            "expression": "AVERAGE('model_comparison'[Accuracy])",
+            "formatString": "0.00%"
+          },
+          {
+            "name": "Model Precision",
+            "expression": "AVERAGE('model_comparison'[Precision])",
+            "formatString": "0.00%"
+          },
+          {
+            "name": "Model Recall",
+            "expression": "AVERAGE('model_comparison'[Recall])",
+            "formatString": "0.00%"
+          },
+          {
+            "name": "Model F1 Score",
+            "expression": "AVERAGE('model_comparison'[F1_Score])",
+            "formatString": "0.0000"
+          },
+          {
+            "name": "Model ROC AUC",
+            "expression": "AVERAGE('model_comparison'[ROC_AUC])",
+            "formatString": "0.0000"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "model_comparison",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(\"D:\\\\fadd\\\\mini project\\\\outputs\\\\model_comparison.csv\"), [Delimiter=\",\", Columns=6, Encoding=65001, QuoteStyle=QuoteStyle.None]),",
+                "    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    ChangedTypes = Table.TransformColumnTypes(PromotedHeaders, {",
+                "        {\"Model\", type text},",
+                "        {\"Accuracy\", type number},",
+                "        {\"Precision\", type number},",
+                "        {\"Recall\", type number},",
+                "        {\"F1_Score\", type number},",
+                "        {\"ROC_AUC\", type number}",
+                "    })",
+                "in",
+                "    ChangedTypes"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

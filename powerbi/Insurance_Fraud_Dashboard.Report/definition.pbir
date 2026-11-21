@@ -1,0 +1,9 @@
+{
+  "version": "1.0",
+  "datasetReference": {
+    "byPath": {
+      "path": "../Insurance_Fraud_Dashboard.SemanticModel"
+    },
+    "byConnection": null
+  }
+}

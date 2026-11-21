@@ -1,0 +1,111 @@
+/*
+  DAX Measures Library - Insurance Claim Fraud Detection
+  Power BI Dashboard: Insurance_Fraud_Dashboard.pbix
+  Tables: fraud_predictions, model_comparison
+*/
+
+// =================================================================================================
+// 1. EXECUTIVE OVERVIEW MEASURES (PAGE 1)
+// =================================================================================================
+
+Total Claims = 
+COUNTROWS('fraud_predictions')
+
+Fraudulent Claims = 
+CALCULATE(
+    COUNTROWS('fraud_predictions'),
+    'fraud_predictions'[Actual_Fraud] = 1
+)
+
+Genuine Claims = 
+CALCULATE(
+    COUNTROWS('fraud_predictions'),
+    'fraud_predictions'[Actual_Fraud] = 0
+)
+
+Fraud Rate = 
+DIVIDE([Fraudulent Claims], [Total Claims], 0)
+
+Fraud Rate % = 
+DIVIDE([Fraudulent Claims], [Total Claims], 0)
+
+High Risk Claims = 
+CALCULATE(
+    COUNTROWS('fraud_predictions'),
+    'fraud_predictions'[Risk_Category] = "High Risk"
+)
+
+Medium Risk Claims = 
+CALCULATE(
+    COUNTROWS('fraud_predictions'),
+    'fraud_predictions'[Risk_Category] = "Medium Risk"
+)
+
+Low Risk Claims = 
+CALCULATE(
+    COUNTROWS('fraud_predictions'),
+    'fraud_predictions'[Risk_Category] = "Low Risk"
+)
+
+
+// =================================================================================================
+// 2. DETAILED FRAUD ANALYSIS MEASURES (PAGE 2)
+// =================================================================================================
+
+Urban Fraud Claims = 
+CALCULATE(
+    [Fraudulent Claims],
+    'fraud_predictions'[AccidentArea] = "Urban"
+)
+
+Rural Fraud Claims = 
+CALCULATE(
+    [Fraudulent Claims],
+    'fraud_predictions'[AccidentArea] = "Rural"
+)
+
+Urban Fraud Rate % = 
+DIVIDE(
+    [Urban Fraud Claims],
+    CALCULATE([Total Claims], 'fraud_predictions'[AccidentArea] = "Urban"),
+    0
+)
+
+Rural Fraud Rate % = 
+DIVIDE(
+    [Rural Fraud Claims],
+    CALCULATE([Total Claims], 'fraud_predictions'[AccidentArea] = "Rural"),
+    0
+)
+
+
+// =================================================================================================
+// 3. MACHINE LEARNING PERFORMANCE MEASURES (PAGE 3)
+// =================================================================================================
+
+Best Model Name = 
+"Gradient Boosting"
+
+Best Accuracy = 
+0.7023
+
+Best Recall = 
+0.8811
+
+Best ROC-AUC = 
+0.8419
+
+Model Accuracy = 
+AVERAGE('model_comparison'[Accuracy])
+
+Model Precision = 
+AVERAGE('model_comparison'[Precision])
+
+Model Recall = 
+AVERAGE('model_comparison'[Recall])
+
+Model F1 Score = 
+AVERAGE('model_comparison'[F1_Score])
+
+Model ROC AUC = 
+AVERAGE('model_comparison'[ROC_AUC])
