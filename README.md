@@ -3,7 +3,6 @@
 [![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
 [![Scikit-Learn](https://img.shields.io/badge/scikit--learn-v1.3%2B-orange.svg)](https://scikit-learn.org/)
 [![Power BI](https://img.shields.io/badge/Power_BI-Desktop-F2C811?logo=powerbi&logoColor=black)](https://powerbi.microsoft.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 An end-to-end Data Science and Business Intelligence project designed to detect fraudulent vehicle insurance claims. This project integrates a complete **Machine Learning** pipeline in Python with a comprehensive 3-page interactive report in **Microsoft Power BI**.
 
