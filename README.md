@@ -118,7 +118,3 @@ Technical evaluation page displaying the live model comparison matrix, multi-met
 - **Vehicle Type:** Sedans account for the highest total volume of fraud incidents, while Sport vehicles show higher severity per claim.
 - **Past Claim History:** Policyholders with multiple prior claims represent an elevated fraud risk tier compared to first-time claimants.
 
----
-
-## 📄 License
-This project is licensed under the MIT License - feel free to use and adapt it for learning and academic purposes.
